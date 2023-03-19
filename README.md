@@ -1,3 +1,3 @@
-# Machine-Learning-LoL
+# Machine Learning Project
 
-[League-of-Legends-Diamond-Games-(First-15-Minutes)](https://www.openml.org/search?type=data&status=active&id=43635)
+Classify LoL ranked games outcome by looking at the first 10min worth of data. [League of Legends Diamond Ranked Games (10 min)]https://www.kaggle.com/datasets/bobbyscience/league-of-legends-diamond-ranked-games-10-min)
