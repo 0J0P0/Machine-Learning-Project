@@ -22,7 +22,6 @@ def k_fold_cv(library, method, X, y, k):
         y_val = y.values[val_index]
         model = getattr(library, method)()
         model.fit(X_learn, y_learn)
-        # coefficents.append(model.coef_)
         acc.append(metrics.accuracy_score(y_val, model.predict(X_val)))
         prec.append(metrics.precision_score(y_val, model.predict(X_val)))
         rec.append(metrics.recall_score(y_val, model.predict(X_val)))
