@@ -1,5 +1,5 @@
 import numpy as np
-import pandas as pd
+# import pandas as pd
 
 from sklearn import metrics
 from sklearn.model_selection import KFold
@@ -26,4 +26,4 @@ def k_fold_cv(library, method, X, y, k):
         prec.append(metrics.precision_score(y_val, model.predict(X_val)))
         rec.append(metrics.recall_score(y_val, model.predict(X_val)))
         f1.append(metrics.f1_score(y_val, model.predict(X_val)))
-    return np.mean(acc), np.mean(prec), np.mean(rec), np.mean(f1)
+    return np.mean(acc), np.mean(prec), np.mean(rec), np.mean(f1), model

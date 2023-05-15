@@ -1,9 +1,6 @@
 import numpy as np
-import pandas as pd
-import seaborn as sns
-from pandas import read_csv
+# import pandas as pd
 
-import sklearn
 from sklearn import metrics
 from sklearn.model_selection import train_test_split
 
@@ -17,7 +14,8 @@ def monte_carlo_cv(library, method, X, y, n):
     n: number of iterations
     """
     acc = []; prec = []; rec = []; f1 = []
-    for i in range(n):
+    for _ in range(n):
+        # aqui no tiene que haber random o si?
         X_learn, X_val, y_learn, y_val = train_test_split(X, y, test_size=0.33, random_state=88)
         model = getattr(library, method)()
         model.fit(X_learn, y_learn)
@@ -26,4 +24,4 @@ def monte_carlo_cv(library, method, X, y, n):
         prec.append(metrics.precision_score(y_val, model.predict(X_val)))
         rec.append(metrics.recall_score(y_val, model.predict(X_val)))
         f1.append(metrics.f1_score(y_val, model.predict(X_val)))
-    return np.mean(acc), np.mean(prec), np.mean(rec), np.mean(f1)
+    return np.mean(acc), np.mean(prec), np.mean(rec), np.mean(f1), model
