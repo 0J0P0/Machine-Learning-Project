@@ -54,10 +54,8 @@ def model_performance(library, method, X, y, repeats=10, k=20, model="single", r
     # 1. Training error
     tr_mod = getattr(library, method)()
     tr_mod.fit(X, y)
-    results_df = results_df.list.append(pd.DataFrame([compute_metrics(y,tr_mod.predict(X))],
-                                                columns= ['Accuracy', 'Precision Macro', 'Recall Macro', 'F1 Macro']),
-                                                ignore_index=True)
-                                                
+    results_df = pd.concat([results_df, pd.DataFrame([compute_metrics(y,tr_mod.predict(X))],
+                    columns= ['Accuracy', 'Precision Macro', 'Recall Macro', 'F1 Macro'])], ignore_index=True)                                            
 
 
     # 2. Single Validation
