@@ -54,7 +54,7 @@ def model_performance(library, method, X, y, repeats=10, k=20, model="single", r
     # 1. Training error
     tr_mod = getattr(library, method)()
     tr_mod.fit(X, y)
-    results_df = results_df.append(pd.DataFrame([compute_metrics(y,tr_mod.predict(X))],
+    results_df = results_df.concat(pd.DataFrame([compute_metrics(y,tr_mod.predict(X))],
                                                 columns= ['Accuracy', 'Precision Macro', 'Recall Macro', 'F1 Macro']),
                                                 ignore_index=True)
 
@@ -63,7 +63,7 @@ def model_performance(library, method, X, y, repeats=10, k=20, model="single", r
     X_learn, X_val, y_learn, y_val = train_test_split(X, y, test_size=0.33, random_state=rand)
     sv_mod = getattr(library, method)()
     sv_mod.fit(X_learn, y_learn)
-    results_df = results_df.append(pd.DataFrame([compute_metrics(y_val,tr_mod.predict(X_val))],
+    results_df = results_df.concat(pd.DataFrame([compute_metrics(y_val,tr_mod.predict(X_val))],
                                                 columns= ['Accuracy', 'Precision Macro', 'Recall Macro', 'F1 Macro']),
                                                 ignore_index=True)
     
@@ -71,14 +71,14 @@ def model_performance(library, method, X, y, repeats=10, k=20, model="single", r
 
     # 3. Monte carlo cross-val (with k=1 up to 'repeats' repetitions)
     mc_acc, mc_prec, mc_rec, mc_f1, mc_mod = monte_carlo_cv(library, method, X, y, repeats, rand)
-    results_df = results_df.append(pd.DataFrame([[mc_acc, mc_prec, mc_rec, mc_f1]],
+    results_df = results_df.concat(pd.DataFrame([[mc_acc, mc_prec, mc_rec, mc_f1]],
                                                 columns= ['Accuracy', 'Precision Macro', 'Recall Macro', 'F1 Macro']),
                                                 ignore_index=True)
     
     
     # 4. k-fold cross-validation
     kf_acc, kf_prec, kf_rec, kf_f1, kf_mod = k_fold_cv(library, method, X, y, k, rand)
-    results_df = results_df.append(pd.DataFrame([[kf_acc, kf_prec, kf_rec, kf_f1]],
+    results_df = results_df.concat(pd.DataFrame([[kf_acc, kf_prec, kf_rec, kf_f1]],
                                                 columns= ['Accuracy', 'Precision Macro', 'Recall Macro', 'F1 Macro']),
                                                 ignore_index=True)
 
