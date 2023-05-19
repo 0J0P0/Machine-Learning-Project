@@ -49,33 +49,28 @@ def model_performance(library, method, X, y, repeats=10, k=20, model="single", r
     results_df: pandas DataFrame, performance of the model using different resampling methods
     model: sklearn model, model trained with the whole dataset
     """
-    results_df = pd.DataFrame(index=[], columns= ['Accuracy', 'Precision Macro', 'Recall Macro', 'F1 Macro'])
-
+    cols = ['Resampling', 'Accuracy', 'Precision Macro', 'Recall Macro', 'F1 Macro']
+    results_df = pd.DataFrame(index=[], columns= cols)
     # 1. Training error
     tr_mod = getattr(library, method)()
     tr_mod.fit(X, y)
-    results_df = pd.concat([results_df, pd.DataFrame([compute_metrics(y,tr_mod.predict(X))],
-                    columns= ['Accuracy', 'Precision Macro', 'Recall Macro', 'F1 Macro'])], ignore_index=True)                                            
+    results_df.loc[0] = ['Training error'] + compute_metrics(y,tr_mod.predict(X))
 
 
     # 2. Single Validation
     X_learn, X_val, y_learn, y_val = train_test_split(X, y, test_size=0.33, random_state=rand)
     sv_mod = getattr(library, method)()
     sv_mod.fit(X_learn, y_learn)
-    results_df = pd.concat([results_df, pd.DataFrame([compute_metrics(y_val,sv_mod.predict(X_val))],
-                    columns= ['Accuracy', 'Precision Macro', 'Recall Macro', 'F1 Macro'])], ignore_index=True)
-    
+    results_df.loc[1] = ['Single Validation'] + compute_metrics(y_val,sv_mod.predict(X_val))    
     
 
     # 3. Monte carlo cross-val (with k=1 up to 'repeats' repetitions)
     mc_acc, mc_prec, mc_rec, mc_f1, mc_mod = monte_carlo_cv(library, method, X, y, repeats, rand)
-    results_df = pd.concat([results_df, pd.DataFrame([[mc_acc, mc_prec, mc_rec, mc_f1]],
-                columns= ['Accuracy', 'Precision Macro', 'Recall Macro', 'F1 Macro'])], ignore_index=True)
+    results_df.loc[2] = ['Monte Carlo'] + [mc_acc, mc_prec, mc_rec, mc_f1]
     
     # 4. k-fold cross-validation
     kf_acc, kf_prec, kf_rec, kf_f1, kf_mod = k_fold_cv(library, method, X, y, k, rand)
-    results_df = pd.concat([results_df, pd.DataFrame([[kf_acc, kf_prec, kf_rec, kf_f1]],
-                columns= ['Accuracy', 'Precision Macro', 'Recall Macro', 'F1 Macro'])], ignore_index=True)
+    results_df.loc[3] = ['K-fold'] + [kf_acc, kf_prec, kf_rec, kf_f1]
 
     if model == "train":
         return results_df, tr_mod
