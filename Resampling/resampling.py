@@ -1,9 +1,37 @@
+import numpy as np
 import pandas as pd
+import plotly.figure_factory as ff
 from Resampling.kfold import k_fold_cv
+from sklearn.metrics import confusion_matrix
 from Resampling.monte_carlo import monte_carlo_cv
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import recall_score, f1_score, accuracy_score, precision_score
 
+
+def confusion_matrix_plot(y_real, y_pred):
+    """
+    This function shows a confusion matrix using plotly.
+
+    Parameters:
+    -----------
+    y_real: pandas Series, real target
+    y_pred: pandas Series, predicted target
+    """
+    cm = confusion_matrix(y_real, y_pred)
+    cm = cm.astype('float') / cm.sum(axis=1)[:, np.newaxis]
+
+    fig = ff.create_annotated_heatmap(cm, colorscale='Viridis')
+    fig.update_layout(title='Confusion Matrix using Single validation',
+                    xaxis_title='Predicted',
+                    yaxis_title='Real',
+                    width=500,
+                    height=500,
+                    showlegend=False)
+    for i in range(len(fig.layout.annotations)):
+        fig.layout.annotations[i].font.size = 12
+        fig.layout.annotations[i].text = str(round(float(fig.layout.annotations[i].text), 2))
+    
+    fig.show()
 
 
 def compute_metrics(y_real,y_pred):
@@ -61,7 +89,8 @@ def model_performance(library, method, X, y, repeats=10, k=20, model="single", r
     X_learn, X_val, y_learn, y_val = train_test_split(X, y, test_size=0.33, random_state=rand)
     sv_mod = getattr(library, method)()
     sv_mod.fit(X_learn, y_learn)
-    results_df.loc[1] = ['Single Validation'] + compute_metrics(y_val,sv_mod.predict(X_val))    
+    results_df.loc[1] = ['Single Validation'] + compute_metrics(y_val,sv_mod.predict(X_val))
+    confusion_matrix_plot(y_val,sv_mod.predict(X_val))
     
 
     # 3. Monte carlo cross-val (with k=1 up to 'repeats' repetitions)
