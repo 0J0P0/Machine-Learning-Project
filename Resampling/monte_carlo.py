@@ -28,7 +28,7 @@ def monte_carlo_cv(library, method, X, y, n, rand=88):
     for _ in range(n):
         # aqui no tiene que haber random o si?
         X_learn, X_val, y_learn, y_val = train_test_split(X, y, test_size=0.33, random_state=rand)
-        model = getattr(library, method)()
+        model = method
         model.fit(X_learn, y_learn)
         
         acc.append(metrics.accuracy_score(y_val, model.predict(X_val)))

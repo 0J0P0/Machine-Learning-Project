@@ -8,6 +8,15 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import recall_score, f1_score, accuracy_score, precision_score
 
 
+from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
+from sklearn.discriminant_analysis import QuadraticDiscriminantAnalysis
+from sklearn.naive_bayes import GaussianNB
+
+from sklearn.svm import SVC
+from sklearn.svm import LinearSVC
+from sklearn.linear_model import LogisticRegression
+from sklearn.ensemble import RandomForestClassifier
+
 def confusion_matrix_plot(y_real, y_pred):
     """
     This function shows a confusion matrix using plotly.
@@ -64,7 +73,7 @@ def model_performance(library, method, X, y, repeats=10, k=20, model="single", r
     Parameters:
     -----------
     library: sklearn, statsmodels, etc.
-    method: string, name of the method to use
+    method:
     X: pandas DataFrame, features
     y: pandas Series, target
     repeats: int, number of times to repeat the experiment
@@ -80,14 +89,14 @@ def model_performance(library, method, X, y, repeats=10, k=20, model="single", r
     cols = ['Resampling', 'Accuracy', 'Precision Macro', 'Recall Macro', 'F1 Macro']
     results_df = pd.DataFrame(index=[], columns= cols)
     # 1. Training error
-    tr_mod = getattr(library, method)()
-    tr_mod.fit(X, y)
+    tr_mod = method
+    tr_mod.fit(X=X, y=y)
     results_df.loc[0] = ['Training error'] + compute_metrics(y,tr_mod.predict(X))
 
 
     # 2. Single Validation
     X_learn, X_val, y_learn, y_val = train_test_split(X, y, test_size=0.33, random_state=rand)
-    sv_mod = getattr(library, method)()
+    sv_mod = method
     sv_mod.fit(X_learn, y_learn)
     results_df.loc[1] = ['Single Validation'] + compute_metrics(y_val,sv_mod.predict(X_val))
     confusion_matrix_plot(y_val,sv_mod.predict(X_val))
