@@ -1,0 +1,9 @@
+Instrucciones para el proyecto de Machine Learning
+
+Para la replicación de los resultados del proyecto se debe tener en cuenta lo siguiente:
+
+1. Se deben tener instaladas las librerías de Python y las correspondientes versiones que se encuentran al inicio del notebook. En caso contrario, podría haber problemas de compatibilidad en algunas funciones o métodos.
+
+2. Se debe tener descargadas las distintas funciones auxiliares utilizadas en el notebook. Estas funciones se encuentran en la carpeta `Resampling`. 
+
+3. Cumplidos los requisitos de compatibilidad, solo queda ejecutar el código. Para ello, se recomienda ejecutar el notebook en un entorno de desarrollo como Visual Studio Code, Jupyter Notebook o Google Colab. Se recomienda ejecutar siempre todo el preprocessing y luego dirigirse a los apartados de interés. Si se desea volver a ejecutar alguna celda, se recomienda repetir el proceso de ejecución desde el principio.
